@@ -1,0 +1,39 @@
+@Autenticador_HostAddress = https://localhost:7275
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzYyNDU0MTMzfQ.sHKzfVt8b3c2XWz1GH-jM83DHzgfxkKjg85snK3_qMU
+
+###
+
+POST {{Autenticador_HostAddress}}/users
+Content-Type: application/json
+{
+  "username": "testuser",
+  "password": "12345678",
+  "confirmpassword": "12345678"
+}
+
+###
+
+# @name login
+POST {{Autenticador_HostAddress}}/api/auth/login
+Content-Type: application/json
+{
+  "username": "testuser",
+  "password": "12345678"
+}
+
+###
+
+# @name refresh
+POST {{Autenticador_HostAddress}}/api/auth/refresh
+Content-Type: application/json
+
+###
+
+POST {{Autenticador_HostAddress}}/api/auth/logout
+Content-Type: application/json
+
+###
+
+GET {{Autenticador_HostAddress}}/users/1
+Authorization: Bearer {{login.response.body.$.accessToken}}
+Content-Type: application/json
