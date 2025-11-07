@@ -46,5 +46,11 @@ namespace Autenticador.Infrastructure.Services
             => await _database.SortedSetAddAsync(key, member, score);
         public async Task<bool> SortedSetRemoveAsync(string key, string member)
             => await _database.SortedSetRemoveAsync(key, member);
+        public async Task<long> SortedSetRemoveRangeByScoreAsync(string key, double minScore, double maxScore)
+            => await _database.SortedSetRemoveRangeByScoreAsync(key, minScore, maxScore);
+        public ITransaction CreateTransaction()
+        {
+            return _database.CreateTransaction();
+        }
     }
 }

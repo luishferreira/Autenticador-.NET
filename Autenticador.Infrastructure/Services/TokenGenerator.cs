@@ -55,10 +55,7 @@ namespace Autenticador.Infrastructure.Services
             {
                 var token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
 
-                //var tokenIsUnique = !_context.Users.Any(u => u.RefreshTokens.Any(t => t.Token == token));
-
-                //if (!tokenIsUnique)
-                //    return getUniqueToken();
+                //validar se o token é unico?
 
                 return token;
             }

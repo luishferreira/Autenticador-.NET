@@ -15,13 +15,7 @@ namespace Autenticador.Api.Controllers
             var response = await mediator.Send(command, cancellationToken);
             SetTokenCookie(response.RefreshToken);
 
-            var jsonResponse = new
-            {
-                success = true,
-                accessToken = response.AccessToken
-            };
-
-            return Ok(jsonResponse);
+            return Ok(new { accessToken = response.AccessToken });
         }
 
         [HttpPost("refresh")]
@@ -34,13 +28,7 @@ namespace Autenticador.Api.Controllers
 
                 SetTokenCookie(response.RefreshToken);
 
-                var jsonResponse = new
-                {
-                    success = true,
-                    accessToken = response.AccessToken
-                };
-
-                return Ok(jsonResponse);
+                return Ok(new { accessToken = response.AccessToken });
             }
             return Unauthorized();
         }
@@ -52,7 +40,7 @@ namespace Autenticador.Api.Controllers
             {
                 Response.Cookies.Delete("refreshToken");
 
-                return Ok(new { success = true, message = "Deslogado com sucesso." });
+                return Ok(new { message = "Deslogado com sucesso." });
             }
             return Unauthorized();
         }

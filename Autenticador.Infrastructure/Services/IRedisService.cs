@@ -10,7 +10,8 @@ namespace Autenticador.Infrastructure.Services
         Task SetStringAsync(string key, string value, TimeSpan? expiry = null);
         Task RemoveAsync(string key);
         Task SortedSetAddAsync(string key, string member, double score);
-        //Task<bool> SortedSetRemoveAsync(string key, string member);
-        //Task<double?> SortedSetScoreAsync(string key, string member);
+        Task<bool> SortedSetRemoveAsync(string key, string member);
+        Task<long> SortedSetRemoveRangeByScoreAsync(string key, double minScore, double maxScore);
+        ITransaction CreateTransaction();
     }
 }

@@ -8,7 +8,7 @@ namespace Autenticador.Application.Features.Auth.Login
 {
     public class LoginHandler(ITokenGenerator tokenGenerator, IUserRepository userRepository, IPasswordHasher passwordHasher, IRefreshTokenRedisService refreshTokenRedisService) : IRequestHandler<LoginCommand, AuthResponse>
     {
-        private readonly ITokenGenerator _jwtTokenGenerator = tokenGenerator;
+        private readonly ITokenGenerator _tokenGenerator = tokenGenerator;
         private readonly IUserRepository _userRepository = userRepository;
         private readonly IPasswordHasher _passwordHasher = passwordHasher;
         private readonly IRefreshTokenRedisService _refreshTokenRedisService = refreshTokenRedisService;
@@ -22,10 +22,12 @@ namespace Autenticador.Application.Features.Auth.Login
             if (!isValid)
                 throw new AuthenticationException("Credenciais inválidas.");
 
-            var accessToken = _jwtTokenGenerator.GenerateAccessToken(user.Id);
-            var refreshToken = _jwtTokenGenerator.GenerateRefreshToken(user.Id);
+            var accessToken = _tokenGenerator.GenerateAccessToken(user.Id);
+            var refreshToken = _tokenGenerator.GenerateRefreshToken(user.Id);
             
             await _refreshTokenRedisService.SetRefreshTokenAsync(refreshToken);
+
+            await _refreshTokenRedisService.CleanExpiredRefreshTokensAsync(user.Id);
 
             return new AuthResponse(accessToken, refreshToken.Token);
         }

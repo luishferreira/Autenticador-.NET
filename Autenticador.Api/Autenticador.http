@@ -6,7 +6,7 @@
 POST {{Autenticador_HostAddress}}/users
 Content-Type: application/json
 {
-  "username": "testuser",
+  "username": "testuser2",
   "password": "12345678",
   "confirmpassword": "12345678"
 }
@@ -17,7 +17,7 @@ Content-Type: application/json
 POST {{Autenticador_HostAddress}}/api/auth/login
 Content-Type: application/json
 {
-  "username": "testuser",
+  "username": "testuser2",
   "password": "12345678"
 }
 
