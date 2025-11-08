@@ -1,5 +1,6 @@
 ﻿using Autenticador.Application.Common.Interfaces;
 using Autenticador.Application.Features.Auth;
+using MediatR.NotificationPublishers;
 using StackExchange.Redis;
 using System.Text.Json;
 
@@ -12,10 +13,7 @@ namespace Autenticador.Infrastructure.Services
         private static string GetUserKey(int userId) => $"user:{userId}";
 
         public async Task<RefreshToken?> GetRefreshTokenAsync(string token)
-        {
-            return await _redisService.GetAsync<RefreshToken>(GetTokenKey(token));
-        }
-
+            => await _redisService.GetAsync<RefreshToken>(GetTokenKey(token));
         public async Task SetRefreshTokenAsync(RefreshToken refreshToken)
         {
             string refreshTokenJsonValue = JsonSerializer.Serialize(refreshToken);
@@ -45,7 +43,19 @@ namespace Autenticador.Infrastructure.Services
             if (!await _transaction.ExecuteAsync())
                 throw new RedisException("Falha ao rotacionar o token.");
         }
+        public async Task LogoutAsync(RefreshToken refreshToken)
+        {
+            string refreshTokenJsonValue = JsonSerializer.Serialize(refreshToken);
+            string tokenKey = GetTokenKey(refreshToken.Token);
 
+            ITransaction _transaction = _redisService.CreateTransaction();
+
+            _ = _transaction.StringSetAsync(tokenKey, refreshTokenJsonValue, refreshToken.ExpiresAt - DateTime.UtcNow);
+            _ = _transaction.SortedSetRemoveAsync(GetUserKey(refreshToken.UserId), refreshToken.Token);
+
+            if (!await _transaction.ExecuteAsync())
+                throw new RedisException("Falha ao fazer logout.");
+        }
         public async Task CleanExpiredRefreshTokensAsync(int userId)
         {
             double nowScore = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();

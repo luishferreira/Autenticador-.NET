@@ -44,6 +44,7 @@ namespace Autenticador.Api.Controllers
             }
             return Unauthorized();
         }
+
         private void SetTokenCookie(string token)
         {
             var cookieOptions = new CookieOptions
