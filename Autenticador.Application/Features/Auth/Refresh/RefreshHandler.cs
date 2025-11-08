@@ -28,7 +28,7 @@ namespace Autenticador.Application.Features.Auth.Refresh
             oldRefreshToken.ReplacedByToken = newRefreshToken.Token;
             oldRefreshToken.ReasonRevoked = "Replaced by new token";
 
-            await _refreshTokenRedisService.RotateTokenAsync(oldRefreshToken, newRefreshToken);
+            await _refreshTokenRedisService.RotateRefreshTokenAsync(oldRefreshToken, newRefreshToken);
 
             await _refreshTokenRedisService.CleanExpiredRefreshTokensAsync(userId);
 

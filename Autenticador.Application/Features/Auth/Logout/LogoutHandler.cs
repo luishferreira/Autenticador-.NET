@@ -16,7 +16,7 @@ namespace Autenticador.Application.Features.Auth.Logout
             refreshToken.RevokedAt = DateTime.UtcNow;
             refreshToken.ReasonRevoked = "User logged out";
 
-            await _refreshTokenRedisService.LogoutAsync(refreshToken);
+            await _refreshTokenRedisService.RevokeRefreshTokenAsync(refreshToken);
         }
     }
 }

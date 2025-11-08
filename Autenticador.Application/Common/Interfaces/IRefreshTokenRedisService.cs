@@ -5,9 +5,11 @@ namespace Autenticador.Application.Common.Interfaces
     public interface IRefreshTokenRedisService
     {
         Task<RefreshToken?> GetRefreshTokenAsync(string token);
-        Task SetRefreshTokenAsync(RefreshToken refreshToken);
-        Task RotateTokenAsync(RefreshToken oldRefreshToken, RefreshToken newRefreshToken);
+        Task SaveNewRefreshTokenAsync(RefreshToken refreshToken);
+        Task RotateRefreshTokenAsync(RefreshToken oldRefreshToken, RefreshToken newRefreshToken);
+        Task RevokeRefreshTokenAsync(RefreshToken refreshToken);
+        Task RevokeAllRefreshTokensAsync(List<RefreshToken> refreshTokens, DateTime revokedAt, string reasonRevoked);
         Task CleanExpiredRefreshTokensAsync(int userId);
-        Task LogoutAsync(RefreshToken refreshToken);
+        Task<List<RefreshToken>> GetAllTokensFromUserAsync(int userId);
     }
 }

@@ -17,7 +17,7 @@ Content-Type: application/json
 POST {{Autenticador_HostAddress}}/api/auth/login
 Content-Type: application/json
 {
-  "username": "testuser",
+  "username": "testuser2",
   "password": "12345678"
 }
 
@@ -33,6 +33,14 @@ POST {{Autenticador_HostAddress}}/api/auth/logout
 Content-Type: application/json
 
 ###
+
+POST {{Autenticador_HostAddress}}/api/auth/logout-all
+Authorization: Bearer {{login.response.body.$.accessToken}}
+Content-Type: application/json
+
+
+###
+
 
 GET {{Autenticador_HostAddress}}/users/1
 Authorization: Bearer {{login.response.body.$.accessToken}}

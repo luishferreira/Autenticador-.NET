@@ -14,7 +14,7 @@ namespace Autenticador.Infrastructure.Services
 
         public async Task<RefreshToken?> GetRefreshTokenAsync(string token)
             => await _redisService.GetAsync<RefreshToken>(GetTokenKey(token));
-        public async Task SetRefreshTokenAsync(RefreshToken refreshToken)
+        public async Task SaveNewRefreshTokenAsync(RefreshToken refreshToken)
         {
             string refreshTokenJsonValue = JsonSerializer.Serialize(refreshToken);
             ITransaction _transaction = _redisService.CreateTransaction();
@@ -27,7 +27,7 @@ namespace Autenticador.Infrastructure.Services
             if (!await _transaction.ExecuteAsync())
                 throw new RedisException("Falha ao salvar o refresh token.");
         }
-        public async Task RotateTokenAsync(RefreshToken oldRefreshToken, RefreshToken newRefreshToken)
+        public async Task RotateRefreshTokenAsync(RefreshToken oldRefreshToken, RefreshToken newRefreshToken)
         {
             string oldRefreshTokenJsonValue = JsonSerializer.Serialize(oldRefreshToken);
             string newRefreshTokenJsonValue = JsonSerializer.Serialize(newRefreshToken);
@@ -43,7 +43,7 @@ namespace Autenticador.Infrastructure.Services
             if (!await _transaction.ExecuteAsync())
                 throw new RedisException("Falha ao rotacionar o token.");
         }
-        public async Task LogoutAsync(RefreshToken refreshToken)
+        public async Task RevokeRefreshTokenAsync(RefreshToken refreshToken)
         {
             string refreshTokenJsonValue = JsonSerializer.Serialize(refreshToken);
             string tokenKey = GetTokenKey(refreshToken.Token);
@@ -56,11 +56,55 @@ namespace Autenticador.Infrastructure.Services
             if (!await _transaction.ExecuteAsync())
                 throw new RedisException("Falha ao fazer logout.");
         }
+        public async Task RevokeAllRefreshTokensAsync(List<RefreshToken> refreshTokens, DateTime revokedAt, string reasonRevoked)
+        {
+            if (refreshTokens is not { Count: > 0 })
+                return;
+
+            ITransaction _transaction = _redisService.CreateTransaction();
+
+            _ = _transaction.KeyDeleteAsync(GetUserKey(refreshTokens.First().UserId));
+
+            foreach (var refreshToken in refreshTokens)
+            {
+                _ = _transaction.StringSetAsync(GetTokenKey(refreshToken.Token), JsonSerializer.Serialize(refreshToken), refreshToken.ExpiresAt - DateTime.UtcNow);
+            }
+
+            if (!await _transaction.ExecuteAsync())
+                throw new RedisException("Falha ao revogar os tokens.");
+        }
+        public async Task<List<RefreshToken>> GetAllTokensFromUserAsync(int userId)
+        {
+            var userKey = GetUserKey(userId);
+            var tokens = await _redisService.SortedSetRangeByRankAsync(userKey, 0, -1);
+
+            if (tokens is not { Length: > 0 })
+                return [];
+
+            var batch = _redisService.CreateBatch();
+            var tasks = new List<Task<RefreshToken?>>();
+
+            var activeTokens = new List<RefreshToken>();
+
+            foreach (var token in tokens)
+            {
+                string tokenKey = GetTokenKey(token);
+                tasks.Add(_redisService.GetAsync<RefreshToken>(tokenKey, batch));
+            }
+
+            batch.Execute();
+            await Task.WhenAll(tasks);
+
+            return [.. tasks.Select(task => task.Result)
+                        .Where(token => token is not null)
+                        .Select(rt => rt!)];
+        }
         public async Task CleanExpiredRefreshTokensAsync(int userId)
         {
             double nowScore = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
             var userKey = GetUserKey(userId);
             var removedCount = await _redisService.SortedSetRemoveRangeByScoreAsync(userKey, double.NegativeInfinity, nowScore);
         }
+
     }
 }

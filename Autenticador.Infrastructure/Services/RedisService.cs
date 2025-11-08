@@ -24,6 +24,17 @@ namespace Autenticador.Infrastructure.Services
                 return default;
             }
         }
+        public async Task<T?> GetAsync<T>(string key, IBatch batch) where T : class
+        {
+            Task<RedisValue> valueTask = batch.StringGetAsync(key);
+
+            var value = await valueTask;
+
+            if (value.IsNullOrEmpty)
+                return null;
+
+            return JsonSerializer.Deserialize<T>(value.ToString());
+        }
         public async Task<string?> GetStringAsync(string key)
         {
             var value = await _database.StringGetAsync(key);
@@ -44,13 +55,20 @@ namespace Autenticador.Infrastructure.Services
             => await _database.KeyDeleteAsync(key);
         public async Task SortedSetAddAsync(string key, string member, double score)
             => await _database.SortedSetAddAsync(key, member, score);
+        public async Task<string[]> SortedSetRangeByRankAsync(string key, long minScore, long maxScore)
+        {
+            var redisValues = await _database.SortedSetRangeByRankAsync(key, minScore, maxScore);
+
+            return Array.ConvertAll(redisValues, rv => rv.ToString());
+        }
         public async Task<bool> SortedSetRemoveAsync(string key, string member)
             => await _database.SortedSetRemoveAsync(key, member);
         public async Task<long> SortedSetRemoveRangeByScoreAsync(string key, double minScore, double maxScore)
             => await _database.SortedSetRemoveRangeByScoreAsync(key, minScore, maxScore);
         public ITransaction CreateTransaction()
-        {
-            return _database.CreateTransaction();
-        }
+            => _database.CreateTransaction();
+        public IBatch CreateBatch()
+            => _database.CreateBatch();
+
     }
 }

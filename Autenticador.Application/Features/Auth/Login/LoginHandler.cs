@@ -25,7 +25,7 @@ namespace Autenticador.Application.Features.Auth.Login
             var accessToken = _tokenGenerator.GenerateAccessToken(user.Id);
             var refreshToken = _tokenGenerator.GenerateRefreshToken(user.Id);
             
-            await _refreshTokenRedisService.SetRefreshTokenAsync(refreshToken);
+            await _refreshTokenRedisService.SaveNewRefreshTokenAsync(refreshToken);
 
             await _refreshTokenRedisService.CleanExpiredRefreshTokensAsync(user.Id);
 
