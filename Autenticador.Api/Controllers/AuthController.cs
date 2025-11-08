@@ -1,4 +1,5 @@
 ﻿using Autenticador.Application.Features.Auth.Login;
+using Autenticador.Application.Features.Auth.Logout;
 using Autenticador.Application.Features.Auth.Refresh;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -36,11 +37,14 @@ namespace Autenticador.Api.Controllers
         [HttpPost("logout")]
         public async Task<IActionResult> Logout(CancellationToken cancellationToken)
         {
-            if (Request.Cookies.TryGetValue("refreshToken", out _))
+            if (Request.Cookies.TryGetValue("refreshToken", out var refreshToken))
             {
+                var command = new LogoutCommand(refreshToken);
+                await mediator.Send(command, cancellationToken);
+
                 Response.Cookies.Delete("refreshToken");
 
-                return Ok(new { message = "Deslogado com sucesso." });
+                return NoContent();
             }
             return Unauthorized();
         }
