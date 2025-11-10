@@ -5,19 +5,18 @@ using System.Security.Authentication;
 
 namespace Autenticador.Application.Features.Auth.Refresh
 {
-    public class RefreshHandler(IRefreshTokenRedisService refreshTokenRedisService, ITokenGenerator tokenGenerator) : IRequestHandler<RefreshCommand, AuthResponse>
+    public class RefreshHandler(IRefreshTokenRedisService refreshTokenRedisService, ITokenGenerator tokenGenerator, ITokenRevocationService tokenRevocationService) : IRequestHandler<RefreshCommand, AuthResponse>
     {
         private readonly IRefreshTokenRedisService _refreshTokenRedisService = refreshTokenRedisService;
         private readonly ITokenGenerator _tokenGenerator = tokenGenerator;
+        private readonly ITokenRevocationService _tokenRevocationService = tokenRevocationService;
         public async Task<AuthResponse> Handle(RefreshCommand command, CancellationToken cancellationToken)
         {
             RefreshToken oldRefreshToken = await _refreshTokenRedisService.GetRefreshTokenAsync(command.RefreshToken) ?? throw new KeyNotFoundException("Refresh token not found.");
             var userId = oldRefreshToken.UserId;
 
             if (oldRefreshToken.IsRevoked)
-            {
-                //revogar todos os refresh tokens do usuário
-            }
+                await _tokenRevocationService.RevokeAllUsersRefreshTokensAsync(userId, DateTime.UtcNow, "Detected use of revoked token");
 
             if (!oldRefreshToken.IsActive)
                 throw new AuthenticationException("Refresh token is not active.");

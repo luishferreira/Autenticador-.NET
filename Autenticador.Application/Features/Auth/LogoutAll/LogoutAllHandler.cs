@@ -3,29 +3,12 @@ using MediatR;
 
 namespace Autenticador.Application.Features.Auth.LogoutAll
 {
-    public class LogoutAllHandler(IRefreshTokenRedisService refreshTokenRedisService) : IRequestHandler<LogoutAllCommand>
+    public class LogoutAllHandler(ITokenRevocationService tokenRevocationService) : IRequestHandler<LogoutAllCommand>
     {
-        private readonly IRefreshTokenRedisService _refreshTokenRedisService = refreshTokenRedisService;
+        private readonly ITokenRevocationService _tokenRevocationService = tokenRevocationService;
         public async Task Handle(LogoutAllCommand command, CancellationToken cancellationToken)
         {
-            var refreshTokens = await _refreshTokenRedisService.GetAllTokensFromUserAsync(command.UserId);
-            var revokedAt = DateTime.UtcNow;
-            var reasonRevoked = "User logged out from all devices";
-
-            var tokensToRevoke = new List<RefreshToken>();
-
-            foreach (var refreshToken in refreshTokens)
-            {
-                if (refreshToken is not { IsActive: true })
-                    continue;
-
-                refreshToken.RevokedAt = revokedAt;
-                refreshToken.ReasonRevoked = reasonRevoked;
-
-                tokensToRevoke.Add(refreshToken);
-            }
-
-            await _refreshTokenRedisService.RevokeAllRefreshTokensAsync(tokensToRevoke, revokedAt, reasonRevoked);
+            await _tokenRevocationService.RevokeAllUsersRefreshTokensAsync(command.UserId, DateTime.UtcNow, "User logged out from all devices");
         }
     }
 }
