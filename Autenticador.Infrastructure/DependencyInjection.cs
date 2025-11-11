@@ -58,6 +58,7 @@ public static class DependencyInjection
         services.AddScoped<ITokenGenerator, TokenGenerator>();
         services.AddScoped<IPasswordHasher, Argon2PasswordHasher>();
         services.AddScoped<IRefreshTokenRedisService, RefreshTokenRedisService>();
+        services.AddScoped<IPermissionCacheService, RedisPermissionCacheService>();
 
         return services;
     }

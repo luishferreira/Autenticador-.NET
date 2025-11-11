@@ -8,7 +8,17 @@ namespace Autenticador.Infrastructure.Persistence.Repositories
     {
         public async Task<User?> GetByIdAsync(int id)
         {
-            return await context.Users.FindAsync(id);
+            return await context.Users
+                .FindAsync(id);
+        }
+
+        public async Task<User?> GetByIdWithRolesAsync(int id)
+        {
+            return await context.Users
+             .Include(u => u.UserRoles)
+             .ThenInclude(ur => ur.Role)
+             .AsNoTracking()
+             .FirstOrDefaultAsync(u => u.Id == id);
         }
 
         public async Task AddAsync(User user)
@@ -23,7 +33,18 @@ namespace Autenticador.Infrastructure.Persistence.Repositories
 
         public async Task<User?> GetByUsernameAsync(string username)
         {
-            return await context.Users.FirstOrDefaultAsync(u => u.Username == username);
+            return await context.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Username == username);
+        }
+
+        public async Task<User?> GetByUsernameWithRolesAsync(string username)
+        {
+            return await context.Users
+                .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Username == username);
         }
     }
 }

@@ -9,6 +9,8 @@ namespace Autenticador.Infrastructure.Persistence;
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options), IUnitOfWork
 {
     public DbSet<User> Users { get; set; }
+    public DbSet<Role> Roles { get; set; }
+    public DbSet<UserRole> UserRoles { get; set; }
 
     public async Task<IDatabaseTransaction> BeginTransactionAsync(CancellationToken ct = default)
     {

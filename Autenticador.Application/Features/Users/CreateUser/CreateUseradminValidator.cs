@@ -1,11 +1,12 @@
-﻿using Autenticador.Domain.Interfaces;
+﻿using Autenticador.Application.Features.Users.CreateUser;
+using Autenticador.Domain.Interfaces;
 using FluentValidation;
 
 namespace Autenticador.Application.Features.Users.Create
 {
-    public sealed class CreateUserValidator : AbstractValidator<CreateUserCommand>
+    public sealed class CreateUserAdminValidator : AbstractValidator<CreateUserAdminCommand>
     {
-        public CreateUserValidator(IUserRepository userRepository)
+        public CreateUserAdminValidator(IUserRepository userRepository)
         {
             RuleFor(x => x.Username)
                 .NotEmpty().WithMessage("O nome é obrigatório.")
@@ -23,6 +24,9 @@ namespace Autenticador.Application.Features.Users.Create
             RuleFor(x => x.ConfirmPassword)
                 .Equal(x => x.Password)
                 .WithMessage("As senhas não coincidem.");
+
+            RuleFor(x => x.RoleId)
+                .IsInEnum().WithMessage("O ID da role é inválido.");
         }
     }
 }

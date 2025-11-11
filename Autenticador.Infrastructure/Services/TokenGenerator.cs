@@ -15,7 +15,7 @@ namespace Autenticador.Infrastructure.Services
     {
         private readonly IConfiguration _configuration = configuration;
 
-        public string GenerateAccessToken(int userId)
+        public string GenerateAccessToken(int userId, List<string> roles)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Secret"] ?? throw new Exception("Secret do JWT não informado")));
             var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -27,6 +27,11 @@ namespace Autenticador.Infrastructure.Services
             {
                 new(JwtRegisteredClaimNames.Sub, userId.ToString()),
             };
+
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             var token = new JwtSecurityToken(
                 issuer,

@@ -4,7 +4,7 @@ namespace Autenticador.Application.Common.Interfaces
 {
     public interface ITokenGenerator
     {
-        string GenerateAccessToken(int userId);
+        string GenerateAccessToken(int userId, List<string> roles);
         RefreshToken GenerateRefreshToken(int userId);
     }
 }

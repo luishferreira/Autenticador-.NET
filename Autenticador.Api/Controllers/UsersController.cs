@@ -1,9 +1,13 @@
 ﻿using Autenticador.Application.Features.Users;
 using Autenticador.Application.Features.Users.Create;
+using Autenticador.Application.Features.Users.CreateUser;
 using Autenticador.Application.Features.Users.GetUserById;
+using Autenticador.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace Autenticador.Api.Controllers
 {
@@ -23,7 +27,7 @@ namespace Autenticador.Api.Controllers
         /// <response code="400">ID de utilizador inválido (Validation Error).</response>
         /// <response code="404">Utilizador não encontrado (Not Found).</response>
         [HttpGet("{id:int}")]
-        [Authorize]
+        [Authorize(Roles = nameof(Roles.Admin))]
         [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -49,12 +53,50 @@ namespace Autenticador.Api.Controllers
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Register(
-            [FromBody] CreateUserCommand command,
+            [FromBody] RegisterUserCommand command,
             CancellationToken cancellationToken)
         {
             var userId = await mediator.Send(command, cancellationToken);
 
             return CreatedAtAction(nameof(Register), new { id = userId }, userId);
+        }
+
+        [Authorize]
+        [HttpGet("me")]
+        public async Task<IActionResult> GetDetails(CancellationToken cancellationToken)
+        {
+            int userId = GetUserIdFromClaims();
+
+            var query = new GetUserByIdQuery(userId);
+            var response = await mediator.Send(query, cancellationToken);
+
+            return Ok(response);
+        }
+
+        [Authorize(Roles = nameof(Roles.Admin))]
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateUserByAdmin(
+            [FromBody] CreateUserAdminCommand command,
+            CancellationToken cancellationToken)
+        {
+            var userId = await mediator.Send(command, cancellationToken);
+            return CreatedAtAction(nameof(CreateUserByAdmin), new { id = userId }, userId);
+        }
+
+        /// <summary>
+        /// Helper privado para ler o ID do utilizador a partir das
+        /// Claims do Access Token.
+        /// </summary>
+        private int GetUserIdFromClaims()
+        {
+            var userIdClaim = (User.FindFirst(JwtRegisteredClaimNames.Sub)
+                ?? User.FindFirst(ClaimTypes.NameIdentifier))
+                ?? throw new UnauthorizedAccessException("User id not found in Access Token.");
+
+            if (int.TryParse(userIdClaim.Value, out var userId))
+                return userId;
+
+            throw new UnauthorizedAccessException("User id not found in Access Token.");
         }
     }
 }

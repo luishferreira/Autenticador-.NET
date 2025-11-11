@@ -5,11 +5,16 @@ using System.Security.Authentication;
 
 namespace Autenticador.Application.Features.Auth.Refresh
 {
-    public class RefreshHandler(IRefreshTokenRedisService refreshTokenRedisService, ITokenGenerator tokenGenerator, ITokenRevocationService tokenRevocationService) : IRequestHandler<RefreshCommand, AuthResponse>
+    public class RefreshHandler(
+        IRefreshTokenRedisService refreshTokenRedisService, 
+        ITokenGenerator tokenGenerator, 
+        ITokenRevocationService tokenRevocationService, 
+        IPermissionCacheService permissionCacheService) : IRequestHandler<RefreshCommand, AuthResponse>
     {
         private readonly IRefreshTokenRedisService _refreshTokenRedisService = refreshTokenRedisService;
         private readonly ITokenGenerator _tokenGenerator = tokenGenerator;
         private readonly ITokenRevocationService _tokenRevocationService = tokenRevocationService;
+        private readonly IPermissionCacheService _permissionCacheService = permissionCacheService;
         public async Task<AuthResponse> Handle(RefreshCommand command, CancellationToken cancellationToken)
         {
             RefreshToken oldRefreshToken = await _refreshTokenRedisService.GetRefreshTokenAsync(command.RefreshToken) ?? throw new KeyNotFoundException("Refresh token not found.");
@@ -31,7 +36,9 @@ namespace Autenticador.Application.Features.Auth.Refresh
 
             await _refreshTokenRedisService.CleanExpiredRefreshTokensAsync(userId);
 
-            var accessToken = _tokenGenerator.GenerateAccessToken(userId);
+            var roles = await _permissionCacheService.GetRolesAsync(userId);
+
+            var accessToken = _tokenGenerator.GenerateAccessToken(userId, roles);
             return new AuthResponse(accessToken, newRefreshToken.Token);
         }
     }

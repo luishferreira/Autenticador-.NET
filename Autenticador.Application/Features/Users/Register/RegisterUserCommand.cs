@@ -1,12 +1,13 @@
 ﻿using Autenticador.Application.Common.Interfaces;
+using Autenticador.Domain.Enums;
 
 namespace Autenticador.Application.Features.Users.Create
 {
     /// <summary>
-    /// O "Command" (mensagem MediatR) para registar um novo utilizador.
-    /// Implementa ICommand<int> para indicar que retorna o ID do novo utilizador.
+    /// Command para registar um novo usuário.
+    /// Retorna o ID do usuário criado.
     /// </summary>
-    public sealed record CreateUserCommand(
+    public sealed record RegisterUserCommand(
         string Username,
         string Password,
         string ConfirmPassword) : ICommand<int>;
