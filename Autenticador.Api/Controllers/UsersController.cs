@@ -1,6 +1,7 @@
 ﻿using Autenticador.Application.Features.Users;
 using Autenticador.Application.Features.Users.Create;
 using Autenticador.Application.Features.Users.CreateUser;
+using Autenticador.Application.Features.Users.GetAllUsers;
 using Autenticador.Application.Features.Users.GetUserById;
 using Autenticador.Domain.Enums;
 using MediatR;
@@ -15,6 +16,15 @@ namespace Autenticador.Api.Controllers
     [Route("[controller]")]
     public class UsersController(IMediator mediator) : ControllerBase
     {
+        [HttpGet]
+        [Authorize(Roles = nameof(Roles.Admin))]
+        public async Task<IActionResult> GetAllUsers(CancellationToken cancellationToken)
+        {
+            var query = new GetAllUsersQuery();
+            var response = await mediator.Send(query, cancellationToken);
+            return Ok(response);
+        }
+
         /// <summary>
         /// Obtém os detalhes de um utilizador específico pelo seu ID.
         /// </summary>

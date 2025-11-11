@@ -10,5 +10,6 @@ namespace Autenticador.Domain.Interfaces
         Task<bool> UsernameExistsAsync(string username);
         Task<User?> GetByUsernameAsync(string username);
         Task<User?> GetByUsernameWithRolesAsync(string username);
+        Task<IEnumerable<User>> GetAllAsync();
     }
 }

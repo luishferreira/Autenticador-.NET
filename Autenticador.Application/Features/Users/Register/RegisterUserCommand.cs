@@ -1,5 +1,4 @@
 ﻿using Autenticador.Application.Common.Interfaces;
-using Autenticador.Domain.Enums;
 
 namespace Autenticador.Application.Features.Users.Create
 {

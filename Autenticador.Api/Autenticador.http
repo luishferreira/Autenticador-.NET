@@ -57,3 +57,10 @@ Content-Type: application/json
 GET {{Autenticador_HostAddress}}/users/1
 Authorization: Bearer {{login.response.body.$.accessToken}}
 Content-Type: application/json
+
+###
+
+GET {{Autenticador_HostAddress}}/users
+Authorization: Bearer {{login.response.body.$.accessToken}}
+
+###

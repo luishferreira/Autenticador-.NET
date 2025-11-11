@@ -46,5 +46,15 @@ namespace Autenticador.Infrastructure.Persistence.Repositories
                 .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Username == username);
         }
+
+        public async Task<IEnumerable<User>> GetAllAsync()
+        {
+            return await context.Users
+                .Include(u => u.UserRoles)
+                    .ThenInclude(r => r.Role)
+                .AsNoTracking()
+                .AsSplitQuery()
+                .ToListAsync();
+        }
     }
 }
