@@ -1,51 +1,39 @@
-# Arquivos e pastas do sistema operacional
 .DS_Store
 Thumbs.db
 
-# Diretórios de compilação e binários
 [Bb]in/
 [Oo]bj/
 
-# Diretório do Visual Studio
 .vs/
 
-# Arquivos de usuário e configurações de IDE
 *.user
 *.suo
 *.sln.docstates
 
-# Ferramentas de IDE (Rider / ReSharper)
 .idea/
 *.DotSettings
 *.DotSettings.user
 
-# Arquivos de teste
 TestResults/
 *.trx
 *.coverlet.json
 *.xml
 
-# Pacotes NuGet e dependências
 *.nupkg
 *.snupkg
 packages/
 *.nuget.props
 *.nuget.targets
 
-# Logs e arquivos de cache
 *.log
 *.cache
 
-# Arquivos gerados pelo EF Core
 *.dbmdl
 
-# Secrets e configurações locais
-# É uma boa prática não comitar configurações de desenvolvimento local
 appsettings.Development.json
 secrets.json
 *.secrets.json
 
-# Arquivos do Web (se estiver usando front-end)
 node_modules/
 npm-debug.log*
 yarn-error.log

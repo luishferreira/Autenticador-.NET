@@ -1,27 +1,4 @@
 @Autenticador_HostAddress = https://localhost:7275
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzYyNDU0MTMzfQ.sHKzfVt8b3c2XWz1GH-jM83DHzgfxkKjg85snK3_qMU
-
-###
-
-POST {{Autenticador_HostAddress}}/users
-Content-Type: application/json
-{
-  "username": "testuser",
-  "password": "12345678",
-  "confirmpassword": "12345678"
-}
-
-###
-
-POST {{Autenticador_HostAddress}}/users/create
-Authorization: Bearer {{login.response.body.$.accessToken}}
-Content-Type: application/json
-{
-  "username": "testuser4",
-  "password": "12345678",
-  "confirmpassword": "12345678",
-  "roleId": 1
-}
 
 ###
 
@@ -49,18 +26,5 @@ Content-Type: application/json
 POST {{Autenticador_HostAddress}}/api/auth/logout-all
 Authorization: Bearer {{login.response.body.$.accessToken}}
 Content-Type: application/json
-
-
-###
-
-
-GET {{Autenticador_HostAddress}}/users/1
-Authorization: Bearer {{login.response.body.$.accessToken}}
-Content-Type: application/json
-
-###
-
-GET {{Autenticador_HostAddress}}/users
-Authorization: Bearer {{login.response.body.$.accessToken}}
 
 ###
