@@ -1,5 +1,4 @@
-﻿using Autenticador.Domain.Constants;
-using Autenticador.Domain.Entities;
+﻿using Autenticador.Domain.Entities;
 using Autenticador.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

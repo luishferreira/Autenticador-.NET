@@ -1,6 +1,5 @@
 ﻿using Autenticador.Application.Common.Interfaces;
 using Autenticador.Application.Features.Auth;
-using MediatR.NotificationPublishers;
 using StackExchange.Redis;
 using System.Text.Json;
 

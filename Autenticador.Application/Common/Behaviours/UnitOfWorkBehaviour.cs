@@ -1,6 +1,6 @@
-﻿using MediatR;
-using Autenticador.Application.Common.Interfaces;
+﻿using Autenticador.Application.Common.Interfaces;
 using Autenticador.Domain.Interfaces;
+using MediatR;
 
 namespace Autenticador.Application.Common.Behaviours;
 

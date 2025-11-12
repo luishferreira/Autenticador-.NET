@@ -1,6 +1,5 @@
 ﻿using Autenticador.Application.Common.Interfaces;
 using Autenticador.Domain.Interfaces;
-using Microsoft.Extensions.Logging;
 
 namespace Autenticador.Infrastructure.Services
 {

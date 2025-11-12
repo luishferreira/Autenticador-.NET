@@ -1,5 +1,4 @@
-﻿using Autenticador.Application.Common.Interfaces;
-using Autenticador.Domain.Entities;
+﻿using Autenticador.Domain.Entities;
 using Autenticador.Domain.Interfaces;
 using AutoMapper;
 using MediatR;

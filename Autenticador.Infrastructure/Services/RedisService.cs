@@ -1,6 +1,4 @@
-﻿using Autenticador.Application.Common.Interfaces;
-using Microsoft.Extensions.Caching.Distributed;
-using StackExchange.Redis;
+﻿using StackExchange.Redis;
 using System.Text.Json;
 
 namespace Autenticador.Infrastructure.Services

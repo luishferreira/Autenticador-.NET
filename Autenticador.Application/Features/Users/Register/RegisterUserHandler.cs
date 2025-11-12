@@ -1,5 +1,4 @@
 ﻿using Autenticador.Application.Common.Interfaces;
-using Autenticador.Domain.Constants;
 using Autenticador.Domain.Entities;
 using Autenticador.Domain.Enums;
 using Autenticador.Domain.Interfaces;

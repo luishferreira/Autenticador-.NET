@@ -1,14 +1,13 @@
 ﻿using Autenticador.Application.Common.Interfaces;
-using Autenticador.Domain.Entities;
 using MediatR;
 using System.Security.Authentication;
 
 namespace Autenticador.Application.Features.Auth.Refresh
 {
     public class RefreshHandler(
-        IRefreshTokenRedisService refreshTokenRedisService, 
-        ITokenGenerator tokenGenerator, 
-        ITokenRevocationService tokenRevocationService, 
+        IRefreshTokenRedisService refreshTokenRedisService,
+        ITokenGenerator tokenGenerator,
+        ITokenRevocationService tokenRevocationService,
         IPermissionCacheService permissionCacheService) : IRequestHandler<RefreshCommand, AuthResponse>
     {
         private readonly IRefreshTokenRedisService _refreshTokenRedisService = refreshTokenRedisService;

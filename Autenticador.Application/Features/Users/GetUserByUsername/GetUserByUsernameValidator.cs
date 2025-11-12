@@ -1,5 +1,4 @@
-﻿using Autenticador.Application.Features.Users.Create;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace Autenticador.Application.Features.Users.GetUserByUsername
 {

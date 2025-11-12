@@ -7,9 +7,9 @@ using System.Security.Authentication;
 namespace Autenticador.Application.Features.Auth.Login
 {
     public class LoginHandler(
-        ITokenGenerator tokenGenerator, 
-        IUserRepository userRepository, 
-        IPasswordHasher passwordHasher, 
+        ITokenGenerator tokenGenerator,
+        IUserRepository userRepository,
+        IPasswordHasher passwordHasher,
         IRefreshTokenRedisService refreshTokenRedisService,
         IPermissionCacheService permissionCacheService) : IRequestHandler<LoginCommand, AuthResponse>
     {
@@ -32,7 +32,7 @@ namespace Autenticador.Application.Features.Auth.Login
 
             var accessToken = _tokenGenerator.GenerateAccessToken(user.Id, roles);
             var refreshToken = _tokenGenerator.GenerateRefreshToken(user.Id);
-            
+
             await _refreshTokenRedisService.SaveNewRefreshTokenAsync(refreshToken);
 
             await _refreshTokenRedisService.CleanExpiredRefreshTokensAsync(user.Id);

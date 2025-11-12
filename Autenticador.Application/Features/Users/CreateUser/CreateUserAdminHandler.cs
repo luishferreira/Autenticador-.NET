@@ -1,7 +1,5 @@
 ﻿using Autenticador.Application.Common.Interfaces;
-using Autenticador.Application.Features.Users.Create;
 using Autenticador.Domain.Entities;
-using Autenticador.Domain.Enums;
 using Autenticador.Domain.Interfaces;
 using AutoMapper;
 using MediatR;

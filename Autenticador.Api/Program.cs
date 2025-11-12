@@ -4,6 +4,7 @@ using Autenticador.Infrastructure;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplicationServices();
