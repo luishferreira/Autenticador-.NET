@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36203.30
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11205.157 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Autenticador.Api", "Autenticador.Api\Autenticador.Api.csproj", "{C3A4A0D3-0511-4F79-9224-403DBABB2D6D}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Autenticador.Application", "Autenticador.Application\Autenticador.Application.csproj", "{9ED85C7B-B63E-4A25-9524-8DBC3D13F16A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Autenticador.Infrastructure", "Autenticador.Infrastructure\Autenticador.Infrastructure.csproj", "{738D8741-41DE-4844-9F73-F9D5E689AFAC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Autenticador.Application.Tests.Unit", "Autenticador.Application.Tests.Unit\Autenticador.Application.Tests.Unit.csproj", "{E5FC896E-4730-46E0-9399-585E03AA888F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{738D8741-41DE-4844-9F73-F9D5E689AFAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{738D8741-41DE-4844-9F73-F9D5E689AFAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{738D8741-41DE-4844-9F73-F9D5E689AFAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5FC896E-4730-46E0-9399-585E03AA888F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5FC896E-4730-46E0-9399-585E03AA888F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5FC896E-4730-46E0-9399-585E03AA888F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5FC896E-4730-46E0-9399-585E03AA888F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
